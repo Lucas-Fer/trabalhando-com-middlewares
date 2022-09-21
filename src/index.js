@@ -23,16 +23,13 @@ function checksExistsUserAccount(request, response, next) {
 function checksCreateTodosUserAvailability(request, response, next) {
   const { user } = request;
 
-  if (user.pro === false) return response.status(400).end();
+  if (user.pro === false && user.todos.length >= 10) return response.status(403).json(user);
 
+  if (user.pro === false && user.todos.length < 10) next();
   next();
 }
 
 function checksTodoExists(request, response, next) {
-  const { user } = request.headers;
-  const { id } = rquest.params;
-
-
 
 }
 
