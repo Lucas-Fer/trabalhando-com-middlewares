@@ -33,15 +33,24 @@ function checksTodoExists(request, response, next) {
   const { username } = request.headers;
   const { id } = request.params;
 
-  const todo = users.find((user) => user.id === id);
   const user = users.find((user) => user.username === username);
-  console.log(todo);
 
   if (id.length < 36) return response.status(400).json({ error: 'Error' });
-  if (!user || !todo) return response.status(404).json({ error: 'Error' });
 
-  request.user = user;
-  request.todo = todo.todos[0]
+  if (user) {
+    const todo = user.todos.find((user) => user.id === id);
+    if (todo) {
+      request.user = user;
+      request.todo = todo;
+    } else {
+      return response.status(404).json({ error: 'Todo not found' });
+
+    }
+  } else {
+    return response.status(404).json({ error: 'User not fount' });
+
+  }
+
   next();
 }
 
